@@ -8,9 +8,11 @@ function Book(title, author, pages, isRead) {
 }
 
 function addBookToLibrary(entry) {
+  const index = myLibrary.length;
   myLibrary.push(entry);
 
   let newElem = document.createElement("div");
+  newElem.setAttribute("data-index", index);
   newElem.classList.add("book");
   addParagraph(newElem, "Title", entry.title);
   addParagraph(newElem, "Author", entry.author);
