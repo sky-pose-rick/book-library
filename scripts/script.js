@@ -19,6 +19,17 @@ function addBookToLibrary(entry) {
   addParagraph(newElem, "Author", entry.author);
   addParagraph(newElem, "Pages", entry.pages);
   addParagraph(newElem, "Status", entry.isRead ? "Have Read": "Not Read Yet");
+
+  let toggleButton = document.createElement("button");
+  toggleButton.addEventListener("click", toggleRead);
+  toggleButton.innerText = "Toggle Status";
+  newElem.appendChild(toggleButton);
+
+  let delButton = document.createElement("button");
+  delButton.addEventListener("click", toggleRead);
+  delButton.innerText = "Delete Book";
+  newElem.appendChild(delButton);
+  
   libraryElem.appendChild(newElem);
 }
 
