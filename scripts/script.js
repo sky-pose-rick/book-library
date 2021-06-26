@@ -29,6 +29,20 @@ function addParagraph(parent, label, content)
   parent.appendChild(newElem);
 }
 
+function toggleRead()
+{
+  //this function is called by a button click
+  //searches for the book in library and changes isRead
+  //updates html on page
+}
+
+function deleteBook()
+{
+  //this function is called by a button click
+  //searches for the book in library and deletes it
+  //deletes element from html
+}
+
 const newButton = document.getElementById("add-button");
 const newForm = document.getElementById("add-form");
 const libraryElem = document.getElementById("library");
@@ -67,7 +81,6 @@ formButton.addEventListener("click", ()=>{
 });
 
 const localLibrary = JSON.parse(localStorage.getItem("OdinLibrary"));
-console.log(localLibrary['0']);
 
 if(!localLibrary)
 {
