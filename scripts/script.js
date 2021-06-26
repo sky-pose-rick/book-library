@@ -15,10 +15,10 @@ function addBookToLibrary(entry) {
   let newElem = document.createElement("div");
   newElem.setAttribute("data-index", entry.index);
   newElem.classList.add("book");
-  addParagraph(newElem, "Title", entry.title);
-  addParagraph(newElem, "Author", entry.author);
-  addParagraph(newElem, "Pages", entry.pages);
-  addParagraph(newElem, "Status", entry.isRead ? "Have Read": "Not Read Yet");
+  addParagraph(newElem, "book-title", "Title", entry.title);
+  addParagraph(newElem, "book-author", "Author", entry.author);
+  addParagraph(newElem, "book-pages", "Pages", entry.pages);
+  addParagraph(newElem, "book-status", "Status", entry.isRead ? "Have Read": "Not Read Yet");
 
   let toggleButton = document.createElement("button");
   toggleButton.addEventListener("click", toggleRead);
@@ -29,13 +29,14 @@ function addBookToLibrary(entry) {
   delButton.addEventListener("click", toggleRead);
   delButton.innerText = "Delete Book";
   newElem.appendChild(delButton);
-  
+
   libraryElem.appendChild(newElem);
 }
 
-function addParagraph(parent, label, content)
+function addParagraph(parent, pClass, label, content)
 {
   let newElem = document.createElement("p");
+  newElem.classList.add(pClass);
   newElem.innerText = `${label}: ${content}`;
   parent.appendChild(newElem);
 }
