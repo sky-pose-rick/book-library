@@ -1,18 +1,19 @@
 let myLibrary = [];
+let bookIndex = 0;
 
 function Book(title, author, pages, isRead) {
   this.title = title;
   this.author = author;
   this.pages = pages;
   this.isRead = isRead;
+  this.index = bookIndex++;
 }
 
 function addBookToLibrary(entry) {
-  const index = myLibrary.length;
   myLibrary.push(entry);
 
   let newElem = document.createElement("div");
-  newElem.setAttribute("data-index", index);
+  newElem.setAttribute("data-index", entry.index);
   newElem.classList.add("book");
   addParagraph(newElem, "Title", entry.title);
   addParagraph(newElem, "Author", entry.author);
@@ -31,6 +32,20 @@ function addParagraph(parent, label, content)
 const newButton = document.getElementById("add-button");
 const newForm = document.getElementById("add-form");
 const libraryElem = document.getElementById("library");
+const hideButton = document.getElementById("hide-button");
+const formButton = document.getElementById("formButton");
+
+newButton.addEventListener("click", ()=>{
+  newForm.toggleAttribute("hidden");
+  newButton.toggleAttribute("hidden");
+  hideButton.toggleAttribute("hidden");
+})
+
+hideButton.addEventListener("click", ()=>{
+  newForm.toggleAttribute("hidden");
+  newButton.toggleAttribute("hidden");
+  hideButton.toggleAttribute("hidden");
+})
 
 let qf = new Book("The quick brown fox", "Some guy", "5", false);
 addBookToLibrary(qf);
