@@ -26,7 +26,7 @@ function addBookToLibrary(entry) {
   newElem.appendChild(toggleButton);
 
   let delButton = document.createElement("button");
-  delButton.addEventListener("click", toggleRead);
+  delButton.addEventListener("click", deleteBook);
   delButton.innerText = "Delete Book";
   newElem.appendChild(delButton);
 
@@ -46,6 +46,19 @@ function toggleRead()
   //this function is called by a button click
   //searches for the book in library and changes isRead
   //updates html on page
+  
+  let parent = this.parentElement;
+  let parentIndex = +parent.getAttribute("data-index");
+  let result;
+  myLibrary.forEach(book =>{
+    if(book.index === parentIndex)
+    {
+      result = book;
+    }
+  });
+  result.isRead = !result.isRead;
+  parent.getElementsByClassName("book-status")[0].innerText = `Status: ${result.isRead ? "Have Read": "Not Read Yet"}`;
+  saveLibrary();
 }
 
 function deleteBook()
@@ -53,6 +66,11 @@ function deleteBook()
   //this function is called by a button click
   //searches for the book in library and deletes it
   //deletes element from html
+}
+
+function saveLibrary()
+{
+  localStorage.setItem('OdinLibrary', JSON.stringify(myLibrary));
 }
 
 const newButton = document.getElementById("add-button");
@@ -89,7 +107,7 @@ formButton.addEventListener("click", ()=>{
 
   const book = new Book(title, author, pages, isRead);
   addBookToLibrary(book);
-  localStorage.setItem('OdinLibrary', JSON.stringify(myLibrary));
+  saveLibrary();
 });
 
 const localLibrary = JSON.parse(localStorage.getItem("OdinLibrary"));
@@ -98,12 +116,14 @@ if(!localLibrary)
 {
   let qf = new Book("The quick brown fox", "Some guy", "5", false);
   addBookToLibrary(qf);
-  localStorage.setItem('OdinLibrary', JSON.stringify(myLibrary));
+  saveLibrary();
 }
 else
 {
   for(let prop in localLibrary)
   {
-    addBookToLibrary(localLibrary[prop]);
+    const book = localLibrary[prop];
+    book.index = bookIndex++;
+    addBookToLibrary(book);
   }
 }
