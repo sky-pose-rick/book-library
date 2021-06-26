@@ -63,10 +63,22 @@ formButton.addEventListener("click", ()=>{
 
   const book = new Book(title, author, pages, isRead);
   addBookToLibrary(book);
+  localStorage.setItem('OdinLibrary', JSON.stringify(myLibrary));
 });
 
-if(myLibrary.length === 0)
+const localLibrary = JSON.parse(localStorage.getItem("OdinLibrary"));
+console.log(localLibrary['0']);
+
+if(!localLibrary)
 {
   let qf = new Book("The quick brown fox", "Some guy", "5", false);
   addBookToLibrary(qf);
+  localStorage.setItem('OdinLibrary', JSON.stringify(myLibrary));
+}
+else
+{
+  for(let prop in localLibrary)
+  {
+    addBookToLibrary(localLibrary[prop]);
+  }
 }
