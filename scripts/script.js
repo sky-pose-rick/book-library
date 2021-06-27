@@ -66,11 +66,28 @@ function deleteBook()
   //this function is called by a button click
   //searches for the book in library and deletes it
   //deletes element from html
+  let parent = this.parentElement;
+  let parentIndex = +parent.getAttribute("data-index");
+  let result;
+  myLibrary.forEach(book =>{
+    if(book.index === parentIndex)
+    {
+      result = book;
+    }
+  });
+  result.isDeleted = true;
+  parent.remove();
+  saveLibrary();
 }
 
 function saveLibrary()
 {
-  localStorage.setItem('OdinLibrary', JSON.stringify(myLibrary));
+  let libraryCopy = [];
+  myLibrary.forEach(book =>{
+    if(!book.isDeleted)
+      libraryCopy.push(book);
+  });
+  localStorage.setItem('OdinLibrary', JSON.stringify(libraryCopy));
 }
 
 const newButton = document.getElementById("add-button");
@@ -112,9 +129,9 @@ formButton.addEventListener("click", ()=>{
 
 const localLibrary = JSON.parse(localStorage.getItem("OdinLibrary"));
 
-if(!localLibrary)
+if(!localLibrary || localLibrary.length === 0)
 {
-  let qf = new Book("The quick brown fox", "Some guy", "5", false);
+  let qf = new Book("The quick brown fox", "a lazy dog", "5", false);
   addBookToLibrary(qf);
   saveLibrary();
 }
