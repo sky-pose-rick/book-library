@@ -41,6 +41,10 @@ function addParagraph(parent, pClass, label, content)
   parent.appendChild(newElem);
 }
 
+Book.prototype.toggleStatus = function(){
+  this.isRead = !this.isRead;
+};
+
 function toggleRead()
 {
   //this function is called by a button click
@@ -56,7 +60,7 @@ function toggleRead()
       result = book;
     }
   });
-  result.isRead = !result.isRead;
+  result.toggleStatus();
   parent.getElementsByClassName("book-status")[0].innerText = `Status: ${result.isRead ? "Have Read": "Not Read Yet"}`;
   saveLibrary();
 }
@@ -141,6 +145,6 @@ else
   {
     const book = localLibrary[prop];
     book.index = bookIndex++;
-    addBookToLibrary(book);
+    addBookToLibrary(new Book(book.author, book.index, book.pages, book.isRead));
   }
 }
