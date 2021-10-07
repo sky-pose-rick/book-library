@@ -104,29 +104,41 @@ newButton.addEventListener("click", ()=>{
   newForm.toggleAttribute("hidden");
   newButton.toggleAttribute("hidden");
   hideButton.toggleAttribute("hidden");
-  formButton.toggleAttribute("hidden");
 });
 
 hideButton.addEventListener("click", ()=>{
   newForm.toggleAttribute("hidden");
   newButton.toggleAttribute("hidden");
   hideButton.toggleAttribute("hidden");
-  formButton.toggleAttribute("hidden");
 });
 
-formButton.addEventListener("click", ()=>{
+formButton.addEventListener("click", (event)=>{
   let children = newForm.children;
-  const title = children[1].value;
-  const author = children[4].value;
-  const pages = children[7].value;
-  const isRead = children[10].checked;
+  const title = children[1];
+  const author = children[4];
+  const pages = children[7];
+  const isRead = children[10];
 
-  if(title === null || author === null || Number.isNaN(+pages))
-  {
-    return;
+  title.checkValidity();
+  if(!title.validity.valid){
+    console.log('title rejected');
+    return false;
   }
 
-  const book = new Book(title, author, pages, isRead);
+  author.checkValidity();
+  if(!author.validity.valid){
+    console.log('author rejected');
+    return false;
+  }
+
+  pages.checkValidity();
+  if(!pages.validity.valid){
+    console.log('pages rejected');
+    return false;
+  }
+  console.log('book accepted');
+
+  const book = new Book(title.value, author.value, pages.value, isRead.checked);
   addBookToLibrary(book);
   saveLibrary();
 });
