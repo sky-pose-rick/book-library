@@ -157,6 +157,6 @@ else
   {
     const book = localLibrary[prop];
     book.index = bookIndex++;
-    addBookToLibrary(new Book(book.author, book.index, book.pages, book.isRead));
+    addBookToLibrary(new Book(book.title, book.author, book.pages, book.isRead));
   }
 }
