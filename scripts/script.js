@@ -99,6 +99,12 @@ const newForm = document.getElementById("add-form");
 const libraryElem = document.getElementById("library");
 const hideButton = document.getElementById("hide-button");
 const formButton = document.getElementById("form-button");
+const children = newForm.children;
+const title = children[1];
+const author = children[4];
+const pages = children[7];
+const isRead = children[10];
+const formError = "";
 
 newButton.addEventListener("click", ()=>{
   newForm.toggleAttribute("hidden");
@@ -112,14 +118,20 @@ hideButton.addEventListener("click", ()=>{
   hideButton.toggleAttribute("hidden");
 });
 
-formButton.addEventListener("click", (event)=>{
-  let children = newForm.children;
-  const title = children[1];
-  const author = children[4];
-  const pages = children[7];
-  const isRead = children[10];
-
+title.addEventListener('input', ()=>{
   title.checkValidity();
+});
+
+author.addEventListener('input', ()=>{
+  title.checkValidity();
+});
+
+pages.addEventListener('input', ()=>{
+  title.checkValidity();
+});
+
+formButton.addEventListener("click", (event)=>{
+  //as a click event, needs to check validity here
   if(!title.validity.valid){
     console.log('title rejected');
     return false;
@@ -141,6 +153,9 @@ formButton.addEventListener("click", (event)=>{
   const book = new Book(title.value, author.value, pages.value, isRead.checked);
   addBookToLibrary(book);
   saveLibrary();
+
+  //prevent page reload
+  event.preventDefault();
 });
 
 const localLibrary = JSON.parse(localStorage.getItem("OdinLibrary"));
