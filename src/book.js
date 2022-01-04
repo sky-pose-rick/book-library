@@ -4,13 +4,15 @@ function Book(title, author, pages, isRead) {
   const index = bookIndex;
   bookIndex += 1;
 
-  return {
+  const obj = {
     title, author, pages, isRead, index,
   };
-}
 
-Book.prototype.toggleStatus = function () {
-  this.isRead = !this.isRead;
-};
+  obj.toggleRead = () => {
+    obj.isRead = !obj.isRead;
+    return obj.isRead;
+  };
+  return obj;
+}
 
 export default Book;
