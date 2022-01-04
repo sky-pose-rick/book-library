@@ -1,0 +1,30 @@
+{
+  "name": "book-library",
+  "version": "1.0.0",
+  "description": "Small javascript example to add and remove books from a local storage library.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack --watch --progress",
+    "visualize-bundle": "webpack --analyze"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sky-pose-rick/book-library.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sky-pose-rick/book-library/issues"
+  },
+  "homepage": "https://github.com/sky-pose-rick/book-library#readme",
+  "dependencies": {
+    "firebase": "^9.6.1"
+  },
+  "devDependencies": {
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1"
+  }
+}
