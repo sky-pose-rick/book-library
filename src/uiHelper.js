@@ -100,12 +100,14 @@ function uiCreateLibrary(library, onToggleRead, onDeleteBook, onAddNewBook) {
     }
     console.log('book accepted');
 
-    onAddNewBook(
+    const newBook = onAddNewBook(
       titleText.value,
       authorText.value,
       pagesText.value,
       isReadBox.checked,
     );
+
+    addBookToLibrary(newBook, onToggleRead, onDeleteBook);
 
     // prevent page reload
     event.preventDefault();
