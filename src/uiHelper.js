@@ -101,14 +101,16 @@ function uiCreateLibrary(library, onToggleRead, onDeleteBook, onAddNewBook) {
     }
     console.log('book accepted');
 
-    const { key, newBook } = onAddNewBook(
+    // use a promise to avoid holding up execution
+    onAddNewBook(
       titleText.value,
       authorText.value,
       pagesText.value,
       isReadBox.checked,
-    );
-
-    addBookToLibrary(key, newBook, onToggleRead, onDeleteBook);
+    ).then((result) => {
+      const { key, newBook } = result;
+      addBookToLibrary(key, newBook, onToggleRead, onDeleteBook);
+    });
 
     // prevent page reload
     event.preventDefault();

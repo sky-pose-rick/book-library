@@ -1,7 +1,57 @@
+import { initializeApp } from 'firebase/app';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+  doc,
+  serverTimestamp,
+} from 'firebase/firestore';
 import uniqid from 'uniqid';
 import Library from './library';
 import uiHelper from './uiHelper';
 import Book from './book';
+
+// Import the functions you need from the SDKs you need
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+// Your web app's Firebase configuration
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyA0xngi3EiPEO9lacm1gwDeOOJdti-PIGw',
+  authDomain: 'booklibrary-80465.firebaseapp.com',
+  projectId: 'booklibrary-80465',
+  storageBucket: 'booklibrary-80465.appspot.com',
+  messagingSenderId: '24974076749',
+  appId: '1:24974076749:web:474eb99bd92860c5792504',
+};
+
+// Initialize Firebase
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+
+// Saves a new message to Cloud Firestore.
+async function fireAddBook(book) {
+  // Add a new message entry to the Firebase database.
+  console.log('try add firestore book');
+  try {
+    await addDoc(collection(db, 'books'), {
+      title: book.title,
+      author: book.author,
+      pages: book.pages,
+      isRead: book.isRead,
+      timestamp: serverTimestamp(),
+    });
+  } catch (error) {
+    console.error('Error writing new message to Firebase Database', error);
+  }
+  console.log('firebase book accepted');
+}
 
 function saveLibrary(library) {
   localStorage.setItem('OdinLibrary', JSON.stringify(library.books));
@@ -25,7 +75,7 @@ function createLibrary(library) {
     const newBook = library.addNewBook(title, author, pages, isRead, key);
     saveLibrary(library);
 
-    return { key, newBook };
+    return Promise.resolve({ key, newBook });
   };
 
   uiHelper.uiCreateLibrary(library, onToggleRead, onDeleteBook, onAddNewBook);
