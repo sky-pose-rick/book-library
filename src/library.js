@@ -1,16 +1,26 @@
 import Book from './book';
 
 function Library() {
-  const books = [];
+  const books = {};
 
-  const addBook = (title, author, pages, isRead) => {
+  const addNewBook = (title, author, pages, isRead, key) => {
     const newBook = Book(title, author, pages, isRead);
-    books.push(newBook);
+    books[key] = newBook;
 
     return newBook;
   };
 
-  return { books, addBook };
+  const addBook = (oldBook, key) => {
+    books[key] = oldBook;
+  };
+
+  const deleteBook = (key) => {
+    delete books[key];
+  };
+
+  return {
+    books, addNewBook, addBook, deleteBook,
+  };
 }
 
 export default Library;

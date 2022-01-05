@@ -1,4 +1,4 @@
-import LibraryFirebase from './libraryFirebase';
+import LibraryManager from './libraryManager';
 
-const loadedLibrary = LibraryFirebase.loadLocalLibrary();
-LibraryFirebase.createLibrary(loadedLibrary);
+const loadedLibrary = LibraryManager.loadLocalLibrary();
+LibraryManager.createLibrary(loadedLibrary);

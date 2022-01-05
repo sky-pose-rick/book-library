@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/sky-pose-rick/book-library#readme",
   "dependencies": {
-    "firebase": "^9.6.1"
+    "firebase": "^9.6.1",
+    "uniqid": "^5.4.0"
   },
   "devDependencies": {
     "eslint": "^8.6.0",

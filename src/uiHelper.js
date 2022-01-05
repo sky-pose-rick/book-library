@@ -18,19 +18,19 @@ function addParagraph(parent, pClass, label, content) {
   return newElem;
 }
 
-function addBookToLibrary(entry, onToggleRead, onDeleteBook) {
+function addBookToLibrary(key, book, onToggleRead, onDeleteBook) {
   const newElem = document.createElement('div');
-  newElem.setAttribute('data-index', entry.index);
+  newElem.setAttribute('key', key);
   newElem.classList.add('book');
-  addParagraph(newElem, 'book-title', 'Title', entry.title);
-  addParagraph(newElem, 'book-author', 'Author', entry.author);
-  addParagraph(newElem, 'book-pages', 'Pages', entry.pages);
-  const toggleElem = addParagraph(newElem, 'book-status', 'Status', entry.isRead ? 'Have Read' : 'Not Read Yet');
+  addParagraph(newElem, 'book-title', 'Title', book.title);
+  addParagraph(newElem, 'book-author', 'Author', book.author);
+  addParagraph(newElem, 'book-pages', 'Pages', book.pages);
+  const toggleElem = addParagraph(newElem, 'book-status', 'Status', book.isRead ? 'Have Read' : 'Not Read Yet');
 
   const toggleButton = document.createElement('button');
   const toggleEvent = () => {
-    onToggleRead(entry);
-    toggleElem.innerText = `Status: ${entry.isRead ? 'Have Read' : 'Not Read Yet'}`;
+    onToggleRead(key);
+    toggleElem.innerText = `Status: ${book.isRead ? 'Have Read' : 'Not Read Yet'}`;
   };
 
   toggleButton.addEventListener('click', toggleEvent);
@@ -38,7 +38,7 @@ function addBookToLibrary(entry, onToggleRead, onDeleteBook) {
   newElem.appendChild(toggleButton);
 
   const deleteEvent = () => {
-    onDeleteBook(entry);
+    onDeleteBook(key);
     newElem.remove();
   };
 
@@ -75,8 +75,9 @@ pagesText.addEventListener('input', () => {
 });
 
 function uiCreateLibrary(library, onToggleRead, onDeleteBook, onAddNewBook) {
-  library.books.forEach((book) => {
-    addBookToLibrary(book, onToggleRead, onDeleteBook);
+  Object.entries(library.books).forEach((entry) => {
+    const [key, value] = entry;
+    addBookToLibrary(key, value, onToggleRead, onDeleteBook);
   });
 
   // add listener to form
@@ -100,14 +101,14 @@ function uiCreateLibrary(library, onToggleRead, onDeleteBook, onAddNewBook) {
     }
     console.log('book accepted');
 
-    const newBook = onAddNewBook(
+    const { key, newBook } = onAddNewBook(
       titleText.value,
       authorText.value,
       pagesText.value,
       isReadBox.checked,
     );
 
-    addBookToLibrary(newBook, onToggleRead, onDeleteBook);
+    addBookToLibrary(key, newBook, onToggleRead, onDeleteBook);
 
     // prevent page reload
     event.preventDefault();
@@ -115,4 +116,15 @@ function uiCreateLibrary(library, onToggleRead, onDeleteBook, onAddNewBook) {
   });
 }
 
-export default { uiCreateLibrary };
+function deleteByKey(key) {
+  const toDelete = libraryElem.children.find((value) => value.key === key);
+  if (toDelete) { toDelete.remove(); }
+}
+
+function changeByKey(key, book, onToggleRead, onDeleteBook) {
+  const toDelete = libraryElem.children.find((value) => value.key === key);
+  if (toDelete) { toDelete.remove(); }
+  addBookToLibrary(key, book, onToggleRead, onDeleteBook);
+}
+
+export default { uiCreateLibrary, deleteByKey, changeByKey };
