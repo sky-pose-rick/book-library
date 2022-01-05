@@ -7,3 +7,11 @@
     border: solid 2px;
     padding: 20px;
 }
+
+input:invalid{
+    box-shadow: 1px 0 2px 1px red;
+}
+
+input:invalid:focus{
+    box-shadow: none;
+}

@@ -11,13 +11,13 @@
           <button id="add-button">NEW BOOK!</button>
           <button id="hide-button" hidden>Hide Form</button>
           <form id="add-form" hidden>
-          <label>Title</label><input type="text" required><br>
-          <label>Author</label><input type="text" required><br>
-          <label>Pages</label><input type="text" required><br>
-          <label>Read</label><input type="checkbox"><br>
-        </form>
-        <button id="form-button" hidden >Confirm</button>
+            <label>Title</label><input type="text" required><br>
+            <label>Author</label><input type="text" required><br>
+            <label>Pages</label><input type="number" required min=1><br>
+            <label>Read</label><input type="checkbox"><br>
+            <input id="form-button" type="submit" value="Confirm"></input>
+          </form>
         </div>
       </body>
-    <script src="scripts/script.js"></script>
+      <script src="main.js"></script>
 </html>
