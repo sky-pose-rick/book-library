@@ -4,3 +4,4 @@ node_modules/*
 #exclude scripts
 *.sh
 src/firebaseConfig.js
+dist/main.js
