@@ -30,7 +30,7 @@ function addBookToLibrary(key, book, onToggleRead, onDeleteBook) {
   const toggleButton = document.createElement('button');
   const toggleEvent = () => {
     onToggleRead(key);
-    toggleElem.innerText = `Status: ${book.isRead ? 'Have Read' : 'Not Read Yet'}`;
+    // toggleElem.innerText = `Status: ${book.isRead ? 'Have Read' : 'Not Read Yet'}`;
   };
 
   toggleButton.addEventListener('click', toggleEvent);
@@ -39,7 +39,7 @@ function addBookToLibrary(key, book, onToggleRead, onDeleteBook) {
 
   const deleteEvent = () => {
     onDeleteBook(key);
-    newElem.remove();
+    // newElem.remove();
   };
 
   const delButton = document.createElement('button');
@@ -107,10 +107,12 @@ function uiCreateLibrary(library, onToggleRead, onDeleteBook, onAddNewBook) {
       authorText.value,
       pagesText.value,
       isReadBox.checked,
-    ).then((result) => {
+    );
+    // let library manager call the add book
+    /* .then((result) => {
       const { key, newBook } = result;
       addBookToLibrary(key, newBook, onToggleRead, onDeleteBook);
-    });
+    }); */
 
     // prevent page reload
     event.preventDefault();
@@ -119,14 +121,24 @@ function uiCreateLibrary(library, onToggleRead, onDeleteBook, onAddNewBook) {
 }
 
 function deleteByKey(key) {
-  const toDelete = libraryElem.children.find((value) => value.key === key);
+  const childArray = Array.from(libraryElem.children);
+  const toDelete = childArray.find((value) => {
+    const bookKey = value.getAttribute('key');
+    return bookKey === key;
+  });
   if (toDelete) { toDelete.remove(); }
 }
 
 function changeByKey(key, book, onToggleRead, onDeleteBook) {
-  const toDelete = libraryElem.children.find((value) => value.key === key);
+  const childArray = Array.from(libraryElem.children);
+  const toDelete = childArray.find((value) => {
+    const bookKey = value.getAttribute('key');
+    return bookKey === key;
+  });
   if (toDelete) { toDelete.remove(); }
   addBookToLibrary(key, book, onToggleRead, onDeleteBook);
 }
 
-export default { uiCreateLibrary, deleteByKey, changeByKey };
+export default {
+  uiCreateLibrary, deleteByKey, changeByKey, addBookToLibrary,
+};

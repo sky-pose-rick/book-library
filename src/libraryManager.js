@@ -4,86 +4,104 @@ import {
   collection,
   addDoc,
   query,
-  orderBy,
-  limit,
   onSnapshot,
-  setDoc,
   updateDoc,
   doc,
-  serverTimestamp,
+  deleteDoc,
 } from 'firebase/firestore';
 import uniqid from 'uniqid';
 import Library from './library';
 import uiHelper from './uiHelper';
 import Book from './book';
-
-// Import the functions you need from the SDKs you need
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-// Your web app's Firebase configuration
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyA0xngi3EiPEO9lacm1gwDeOOJdti-PIGw',
-  authDomain: 'booklibrary-80465.firebaseapp.com',
-  projectId: 'booklibrary-80465',
-  storageBucket: 'booklibrary-80465.appspot.com',
-  messagingSenderId: '24974076749',
-  appId: '1:24974076749:web:474eb99bd92860c5792504',
-};
+import getFirebaseConfig from './firebaseConfig';
 
 // Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(getFirebaseConfig());
 const db = getFirestore(firebaseApp);
-
-// Saves a new message to Cloud Firestore.
-async function fireAddBook(book) {
-  // Add a new message entry to the Firebase database.
-  console.log('try add firestore book');
-  try {
-    await addDoc(collection(db, 'books'), {
-      title: book.title,
-      author: book.author,
-      pages: book.pages,
-      isRead: book.isRead,
-      timestamp: serverTimestamp(),
-    });
-  } catch (error) {
-    console.error('Error writing new message to Firebase Database', error);
-  }
-  console.log('firebase book accepted');
-}
 
 function saveLibrary(library) {
   localStorage.setItem('OdinLibrary', JSON.stringify(library.books));
 }
 
-function createLibrary(library) {
+async function createLibrary(library) {
   // create ui and attach listeners
 
-  const onToggleRead = (key) => {
+  const onToggleRead = async (key) => {
     library.books[key].toggleRead();
-    saveLibrary(library);
+    // saveLibrary(library);
+    const {
+      title, author, pages, isRead,
+    } = library.books[key];
+
+    try {
+      const docRef = await updateDoc(doc(db, 'books', key), {
+        title, author, pages, isRead,
+      });
+    } catch (e) {
+      console.error('Error changing book: ', e);
+    }
   };
 
-  const onDeleteBook = (key) => {
-    library.deleteBook(key);
-    saveLibrary(library);
+  const onDeleteBook = async (key) => {
+    try {
+      const docRef = await deleteDoc(doc(db, 'books', key));
+    } catch (e) {
+      console.error('Error deleting book: ', e);
+    }
+    // saveLibrary(library);
   };
 
-  const onAddNewBook = (title, author, pages, isRead) => {
-    const key = uniqid();
+  const onAddNewBook = async (title, author, pages, isRead) => {
+    // snapshot handles updating the library object
+    /* const key = uniqid();
     const newBook = library.addNewBook(title, author, pages, isRead, key);
-    saveLibrary(library);
-
-    return Promise.resolve({ key, newBook });
+    saveLibrary(library); */
+    try {
+      const docRef = await addDoc(collection(db, 'books'), {
+        title, author, pages, isRead,
+      });
+    } catch (e) {
+      console.error('Error adding book: ', e);
+    }
   };
 
+  // pass an empty library to initialize the form's event handlers
   uiHelper.uiCreateLibrary(library, onToggleRead, onDeleteBook, onAddNewBook);
+
+  // begin tracking changes to database
+  const q = query(collection(db, 'books'));
+  const unsub = onSnapshot(q, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === 'added') {
+        const key = change.doc.id;
+        const {
+          title, author, pages, isRead,
+        } = change.doc.data();
+        const newBook = library.addNewBook(title, author, pages, isRead, key);
+        uiHelper.addBookToLibrary(key, newBook, onToggleRead, onDeleteBook);
+      }
+      if (change.type === 'modified') {
+        const key = change.doc.id;
+        console.log('change requested', key);
+        const {
+          title, author, pages, isRead,
+        } = change.doc.data();
+        const newBook = Book(title, author, pages, isRead);
+        uiHelper.changeByKey(key, newBook, onToggleRead, onDeleteBook);
+      }
+      if (change.type === 'removed') {
+        const key = change.doc.id;
+        console.log('delete requested', key);
+        uiHelper.deleteByKey(key);
+      }
+    });
+  });
 }
 
 function loadLocalLibrary() {
+  // no local data when using firebase
   const myLibrary = Library();
-  const localLibrary = JSON.parse(localStorage.getItem('OdinLibrary'));
+  /* const localLibrary = JSON.parse(localStorage.getItem('OdinLibrary'));
   console.log(localLibrary);
 
   if (!localLibrary || localLibrary.length === 0) {
@@ -100,8 +118,7 @@ function loadLocalLibrary() {
     });
   }
 
-  console.log(myLibrary.books);
-
+  console.log(myLibrary.books); */
   return myLibrary;
 }
 
